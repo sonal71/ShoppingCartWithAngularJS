@@ -1,0 +1,58 @@
+<div>
+	<div class="col-sm-9">
+        <div class="box border inverse">
+            <div class="box-title">
+                <h4><i class="fa fa-money"></i>Cart Details</h4>
+            </div>
+            <div class="box-body">
+                
+                <bootstrap-alert class="alert alert-block alert-danger" alert-text="No items in cart!" ng-if="totalItems == 0">
+                </bootstrap-alert>
+                
+                <ul class="list-unstyled" ng-repeat="product in productsInCart">
+                    <li class="clearfix">
+                        <div class="pull-left col-sm-2">
+                            <img class="media-object" src="{{ product.imageSrc }}" alt="{{ product.imageAlt}}" width="100%">
+                        </div>
+                        <div class="pull-left">
+                            <p>
+                                <h5>{{ product.title}}</h5>
+                            </p>
+                            <p>
+                                <span>{{ product.description}}</span>
+                            </p>
+                        </div>
+                        <div class="text-right pull-right">
+                            <h4 class="cost">${{ product.price | setDecimal:2 }}</h4>
+                            <button href="#/cart" class="btn btn-danger btn-sm" ng-click="removeFromCart(product.userId, product.productID)">
+                                Remove from  <i class="glyphicon glyphicon-white glyphicon-shopping-cart"></i>
+                            </button>
+                        </div>
+
+                    </li>
+                </ul>
+            </div>
+        </div>
+	</div>
+    <div class="col-sm-3">
+    
+        <div class="box border inverse">
+            <div class="box-title">
+                <h4><i class="fa fa-money"></i>Cart Summary</h4>
+            </div>
+            <div class="box-body">
+                  <div class="sparkline-row">
+                    <span class="title">Total</span>
+                    <span class="value pull-right">${{totalAmount | setDecimal:2}}</span>
+                  </div>
+            </div>
+            <span ng-if="totalItems != 0">
+                <a href="#/checkout" class="btn btn-success btn-sm margin-10"> 
+                    Checkout  <i class="glyphicon glyphicon-white glyphicon-shopping-cart"></i> 
+                </a>
+            </span>
+        </div>
+    </div>
+</div>
+
+

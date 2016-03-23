@@ -1,0 +1,15 @@
+<div class="col-sm-3">
+    <div class="list-group">
+        <a href="#/" class="list-group-item">
+        	<img class="media-object" src="{{ productInfo.imageSrc }}" alt="{{ productInfo.imageAlt}}" width="100%">
+            <h4 class="list-group-item-heading">{{ productInfo.title }}</h4>
+            <span>$ {{ productInfo.price}}</span>
+            <p class="list-group-item-text">
+            	{{ productInfo.description }}
+            </p>
+            <button href="/#/" class="btn btn-primary btn-small" ng-click="addToCartFunction({aproduct: productInfo})">
+                Add to  <i class="glyphicon glyphicon-white glyphicon-shopping-cart"></i>
+            </button>
+        </a>
+    </div>
+</div>
