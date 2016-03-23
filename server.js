@@ -5,7 +5,7 @@ var morgan = require('morgan');             // log requests to the console (expr
 var bodyParser = require('body-parser');    // pull information from HTML POST (express4)
 var methodOverride = require('method-override'); // simulate DELETE and PUT (express4)
 
-mongoose.connect('mongodb://localhost:27017/shopping_cart/prodyc');     // connect to mongoDB database on modulus.io
+mongoose.connect('mongodb://localhost:27017/shopping_cart');     // connect to mongoDB database on modulus.io
 
 var db = mongoose.connection;
 
