@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-lg-12" ng-controller="mainController">
-    	<product-list ng-repeat="product in products" product-info="product" is-in-cart="added" add-to-cart-function="addToCart(product.productID)"></product-list>
+        <product-list ng-repeat="product in products" product-info="product" products-in-cart="productsInCart" add-to-cart-function="addToCart(product.productID)"></product-list>
     </div>
 </div>        
 <div class="modal fade" id="myModal" role="dialog">
@@ -11,7 +11,7 @@
                     <h4 class="modal-title">Notice</h4>
                 </div>
                 <div class="modal-body">
-                    <p>This product already exist in the cart.</p>
+                    <p>This product is already in your cart.</p>
                 </div>
           </div>
     </div>

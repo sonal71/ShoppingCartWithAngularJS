@@ -1,19 +1,22 @@
-myApp.controller('headerController', ['$scope', function($scope){
+myApp.controller('headerController', ['$scope', 'Cart', function($scope, Cart){
 
-	if(sessionStorage.totalItems === undefined){
-		sessionStorage.totalItems = 0;
+	if(Cart.totalItems === undefined){
+		Cart.totalItems = 0;
 	}
-	$scope.$root.totalItems = sessionStorage.totalItems;
+    setTimeout(function(){
+        $scope.$root.totalItems = Cart.totalItems
+    }, 100);
     
 }]);
 
-myApp.controller('mainController', ['$scope', '$http', '$filter', '$route', 'GetProductsService', 'GetProductsInCartService', 'UserService', 'Cart', function($scope, $http, $filter, $route, GetProductsService, GetProductsInCartSetvice, UserService, Cart){
+myApp.controller('mainController', ['$scope', '$http', '$filter', 'GetProductsService', 'UserService', 'Cart', function($scope, $http, $filter, GetProductsService, UserService, Cart){
     $scope.products = GetProductsService.$$state.value.data;
-    $scope.productsInCart = GetProductsInCartSetvice.$$state.value.data;
+    $scope.productsInCart = Cart.data;
     
     $scope.addToCart = function(productID) {
         $scope.productsInCart = Cart.data;
         $scope.productExist = false;
+        
         angular.forEach($scope.productsInCart, function(value, key){
             if(value.productID === productID) {
                 $scope.productExist = true;
@@ -42,22 +45,22 @@ myApp.controller('mainController', ['$scope', '$http', '$filter', '$route', 'Get
             }).success(function(response){
                 $scope.data = {};
                 $scope.productsInCart = Cart.data = response;
-                console.log($scope.productsInCart);
         
-                sessionStorage.totalItems = parseInt(sessionStorage.totalItems) +1;
-                $scope.$root.totalItems = sessionStorage.totalItems;
+                Cart.totalItems = parseInt(Cart.totalItems) + 1;
+                $scope.$root.totalItems = Cart.totalItems;
         
             });
         } else {
-            $('#myModal').modal();
+            $('#myModal').modal({keyboard: true});
         }
     }
     
 }]);
 
-myApp.controller('cartController', ['$scope', '$filter', '$log', '$http', '$location', 'ProductsInCart', 'UserService', 'Cart', function($scope, $filter, $log, $http, $location, ProductsInCart, UserService, Cart){
+myApp.controller('cartController', ['$scope', '$filter', '$http', 'ProductsInCart', 'UserService', 'Cart', function($scope, $filter, $http, ProductsInCart, UserService, Cart){
 	$scope.totalItems = $scope.$root.totalItems;
-    $scope.productsInCart = Cart.data = ProductsInCart.data;
+    $scope.productsInCart = Cart.data;
+    
     $scope.totalAmount = 0;
     angular.forEach($scope.productsInCart, function(value, key){
         $scope.totalAmount = parseFloat($scope.totalAmount) + parseFloat(value.price);
@@ -75,8 +78,8 @@ myApp.controller('cartController', ['$scope', '$filter', '$log', '$http', '$loca
             angular.forEach($scope.productsInCart, function(value, key){
                 $scope.totalAmount = parseFloat($scope.totalAmount) + parseFloat(value.price);
             });
-            sessionStorage.totalItems = parseInt(sessionStorage.totalItems) -1;
-            $scope.totalItems = $scope.$root.totalItems = sessionStorage.totalItems;
+            Cart.totalItems = parseInt(Cart.totalItems) -1;
+            $scope.totalItems = $scope.$root.totalItems = Cart.totalItems;
         });
     }
 }]);
@@ -84,7 +87,7 @@ myApp.controller('cartController', ['$scope', '$filter', '$log', '$http', '$loca
 myApp.controller('checkOutController', ['$scope', '$filter', '$http', 'ProductsInCart', 'UserService', 'Cart', function($scope, $filter, $http, ProductsInCart, UserService, Cart){
     
     $scope.totalItems = $scope.$root.totalItems;
-    $scope.productsInCart = ProductsInCart.data;
+    $scope.productsInCart = Cart.data;
     
     $scope.discountCoupon = "";
     $scope.couponApplied = "";
@@ -93,31 +96,34 @@ myApp.controller('checkOutController', ['$scope', '$filter', '$http', 'ProductsI
     angular.forEach($scope.productsInCart, function(value, key){
         $scope.totalAmount = parseFloat($scope.totalAmount) + parseFloat(value.price);
     });
+    
     $scope.applyDiscount = function() {
-        console.log($scope.couponApplied);
-        if(typeof Object.keys($scope.couponApplied)[0] === 'undefined'){
+        if($scope.couponApplied.length === 0){
             $scope.url = '/api/discount/'+$scope.discountCoupon;
             $http({
                 method  : 'GET',
                 url     : $scope.url,
                 headers : { 'Content-Type': 'application/x-www-form-urlencoded' }
             }).success(function(response){
-                console.log(response);
                 if(response === null){ 
-                    $('#noCouponModal').modal();
+                    $('#noCouponModal').modal({keyboard: true});
                 } else {
-                    if(response.discountAmount !== null) {
-                        $scope.totalAmount = $scope.totalAmount - response.discountAmount;
+                    if(response.defaultAmount <= $scope.totalAmount) {
+                        if(response.discountAmount !== null) {
+                            $scope.totalAmount = $scope.totalAmount - response.discountAmount;
+                        } else {
+                            $scope.totalAmount = $scope.totalAmount - (response.discountPercentage*$scope.totalAmount/100);
+                        }
+                        $scope.couponApplied = response;
                     } else {
-                        $scope.totalAmount = $scope.totalAmount - (response.discountPercentage*$scope.totalAmount/100);
+                        $('#discountConditionModal').modal({keyboard: true}); 
                     }
                 }
-                $scope.couponApplied = response;
-                
             }).error(function(response){
+                
             });
         } else {
-            $('#couponModal').modal();
+            $('#couponModal').modal({keyboard: true});
         }
     }
     
@@ -131,8 +137,8 @@ myApp.controller('checkOutController', ['$scope', '$filter', '$http', 'ProductsI
         }).success(function(response){
             $scope.productsInCart = Cart.data = response;
             $scope.totalAmount = 0;
-            sessionStorage.totalItems = 0;
-            $scope.totalItems = $scope.$root.totalItems = sessionStorage.totalItems;
+            Cart.totalItems = 0;
+            $scope.totalItems = $scope.$root.totalItems = Cart.totalItems;
         });    
     }
 

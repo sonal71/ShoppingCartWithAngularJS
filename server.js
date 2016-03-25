@@ -48,7 +48,8 @@ var Cart = mongoose.model('Cart', cartSchema);
 var discountSchema = new Schema({
     "discountId" : String,
     "discountAmount" : String,
-    "discountPercentage" : String
+    "discountPercentage" : String,
+    "defaultAmount" : String
 });
 var Discount = mongoose.model('Discount', discountSchema);
 

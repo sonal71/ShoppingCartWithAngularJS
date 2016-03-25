@@ -6,7 +6,7 @@ myApp.directive("productList", function($compile){
 		scope: {
 			productInfo: '=',
 			addToCartFunction: '&',
-			isInCart: '@'
+			productsInCart: '='
 		}
 	}
 });

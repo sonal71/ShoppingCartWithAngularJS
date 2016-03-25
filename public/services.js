@@ -13,13 +13,14 @@ myApp.service('GetProductsService', ['$http', '$q', function($http, $q){
     return deferred.promise;
 }]);
 
-myApp.service('GetProductsInCartService', ['$http', '$q', 'UserService', function($http, $q, UserService){    
+myApp.service('GetProductsInCartService', ['$http', '$q', 'UserService', 'Cart', function($http, $q, UserService, Cart){    
     var deferred = $q.defer();
     $http({ 
         method: 'GET', 
         url: 'api/cart/'+UserService.user_id
     })
     .success(function (data, status, headers, config) {
+        Cart.data = data;
         deferred.resolve({data});
     })
     .error(function (data, status, headers, config) {
@@ -28,14 +29,17 @@ myApp.service('GetProductsInCartService', ['$http', '$q', 'UserService', functio
     return deferred.promise;
 }]);
 
-myApp.service('UserService',function(){
+myApp.service('UserService', function(){
    this.user_id = 2; 
 });
+
 myApp.service('Cart', function(){
     this.data = { };
+    this.totalItems;
+    this.totalAmount;
 });
 
-myApp.service('ItemInCartCount', ['$http', '$q', 'UserService', function($http, $q, UserService, Cart){
+myApp.service('ItemInCartCount', ['$http', '$q', 'UserService', 'Cart', function($http, $q, UserService, Cart){
     var deferred = $q.defer();
     $http({ 
         method: 'GET', 
@@ -43,7 +47,7 @@ myApp.service('ItemInCartCount', ['$http', '$q', 'UserService', function($http, 
     })
     .success(function (data, status, headers, config) {
         length = data.length;
-        sessionStorage.setItem('totalItems', length);
+        Cart.totalItems = length;
         deferred.resolve({length});
     })
     .error(function (data, status, headers, config) {

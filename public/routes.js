@@ -33,6 +33,9 @@ myApp.config(function($routeProvider){
                     });
                     return deferred.promise;
                 }],
+                ProductsInCart: ['GetProductsInCartService', function(GetProductsInCartService) {
+                    return GetProductsInCartService;
+                }],
                 ItemsInCart: ['ItemInCartCount', function(ItemInCartCount){
                     return ItemInCartCount;
                 }]
@@ -56,6 +59,9 @@ myApp.config(function($routeProvider){
                         deferred.reject();
                     });
                     return deferred.promise;
+                }],
+                ProductsInCart: ['GetProductsInCartService', function(GetProductsInCartService) {
+                    return GetProductsInCartService;
                 }],
                 ItemsInCart: ['ItemInCartCount', function(ItemInCartCount){
                     return ItemInCartCount;

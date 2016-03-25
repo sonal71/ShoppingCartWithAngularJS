@@ -10,6 +10,11 @@
             <button href="/#/" class="btn btn-primary btn-small" ng-click="addToCartFunction({aproduct: productInfo})">
                 Add to  <i class="glyphicon glyphicon-white glyphicon-shopping-cart"></i>
             </button>
+            <span ng-repeat="product in productsInCart">
+                <span ng-if="product.productID === productInfo.productID" class="label label-success">
+                    <i class="glyphicon glyphicon-ok"></i> In cart
+                </span>
+            </span>
         </a>
     </div>
 </div>
