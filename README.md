@@ -31,6 +31,7 @@ carts {
 discounts {
     "discountId" : String,      // Discount coupon ID, entered by user
     "discountAmount" : String,   // Amount of discount or Discount in percentage
-    "discountPercentage" : String
+    "discountPercentage" : String,
+    "defaultAmount" : String
 }
 ```
